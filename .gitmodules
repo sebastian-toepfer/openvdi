@@ -1,0 +1,3 @@
+[submodule "tools/adr"]
+	path = tools/adr
+	url = https://github.com/npryce/adr-tools.git
