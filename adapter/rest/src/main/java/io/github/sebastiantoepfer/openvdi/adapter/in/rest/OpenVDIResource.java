@@ -23,16 +23,16 @@
  */
 package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
+import static io.github.sebastiantoepfer.openvdi.adapter.in.rest.Constants.SELF;
 import static java.util.function.Predicate.not;
 
+import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonCollectors;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -43,35 +43,34 @@ import java.util.stream.Stream;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public class OpenVDIResource {
+public class OpenVDIResource extends SelfDescribeableResource {
 
-    @HEAD
-    public Response links(@Context final UriInfo uri) {
-        return Response.ok().links(createLinks(uri).toArray(Link[]::new)).build();
+    @Inject
+    public OpenVDIResource(final UriInfo uri) {
+        super(uri);
     }
 
     @GET
-    public Response resources(@Context final UriInfo uri) {
-        final Link[] links = createLinks(uri).toArray(Link[]::new);
+    public Response resources() {
+        final Link[] links = allLinks().toArray(Link[]::new);
         return Response.ok()
             .links(links)
             .entity(
                 Arrays.stream(links)
                     .filter(l -> MediaType.APPLICATION_JSON.equals(l.getType()))
-                    .filter(not(l -> l.getRel().equals("_self")))
+                    .filter(not(l -> l.getRel().equals(SELF)))
                     .map(l -> Map.entry(l.getRel(), (JsonValue) Json.createValue(l.getUri().toString())))
                     .collect(JsonCollectors.toJsonObject())
             )
             .build();
     }
 
-    private Stream<Link> createLinks(@Context final UriInfo uri) {
+    @Override
+    protected Stream<Link> additionalLinks() {
         return Stream.of(
-            Link.fromUri(uri.getAbsolutePath()).type(MediaType.APPLICATION_JSON).rel("_self").build(),
-            Link.fromUri(uri.getAbsolutePathBuilder().path("companies").build())
+            Link.fromUri(getAbsolutePathBuilder().path("companies").build())
                 .type(MediaType.APPLICATION_JSON)
                 .rel("companies")
-                .build()
-        );
+        ).map(Link.Builder::build);
     }
 }

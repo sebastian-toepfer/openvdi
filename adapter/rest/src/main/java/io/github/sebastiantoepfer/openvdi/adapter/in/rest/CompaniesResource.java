@@ -29,10 +29,10 @@ import io.github.sebastiantoepfer.ddd.media.json.stream.TerminableDecorator;
 import io.github.sebastiantoepfer.openvdi.domain.Company;
 import io.github.sebastiantoepfer.openvdi.port.in.ListKnowCompanies;
 import jakarta.inject.Inject;
+import jakarta.json.Json;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -46,22 +46,47 @@ import java.util.stream.Stream;
 
 @Path("/companies")
 @Produces(MediaType.APPLICATION_JSON)
-public class CompaniesResource {
+public class CompaniesResource extends SelfDescribeableResource {
 
     private static final Logger LOG = Logger.getLogger(CompaniesResource.class.getName());
     private final ListKnowCompanies knowCompanies;
 
     @Inject
-    public CompaniesResource(final ListKnowCompanies knowCompanies) {
+    public CompaniesResource(final UriInfo uri, final ListKnowCompanies knowCompanies) {
+        super(
+            uri,
+            Json.createObjectBuilder()
+                .add("$schema", "https://json-schema.org/draft/2020-12/schema")
+                .add("type", "array")
+                .add(
+                    "items",
+                    Json.createObjectBuilder()
+                        .add("type", "object")
+                        .add(
+                            "properties",
+                            Json.createObjectBuilder()
+                                .add(
+                                    "location",
+                                    Json.createObjectBuilder()
+                                        .add("type", "string")
+                                        .add("format", "uri")
+                                        .add("readOnly", true)
+                                )
+                                .add("name", Json.createObjectBuilder().add("type", "string"))
+                        )
+                        .add("required", Json.createArrayBuilder().add("name"))
+                )
+                .build()
+        );
         this.knowCompanies = Objects.requireNonNull(knowCompanies);
     }
 
     @GET
-    public Response list(@Context final UriInfo uri) {
-        final Location location = new Location(uri.getAbsolutePathBuilder(), "name");
+    public Response list() {
+        final Location location = new Location(getAbsolutePathBuilder(), "name");
         return Response.ok()
             .type(MediaType.APPLICATION_JSON)
-            .links(Link.fromUri(uri.getAbsolutePath()).rel("_self").type(MediaType.APPLICATION_JSON).build())
+            .links(defaultLinks().toArray(Link[]::new))
             .entity(
                 (StreamingOutput) out -> {
                     try (
@@ -84,5 +109,12 @@ public class CompaniesResource {
                 }
             )
             .build();
+    }
+
+    @GET
+    @Produces(Constants.SCHEMA_MEDIA_TYPE)
+    @Override
+    public Response jsonSchema() {
+        return super.jsonSchema();
     }
 }

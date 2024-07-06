@@ -21,17 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.sebastiantoepfer.openvdi.app.untertow;
+package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
-import io.github.sebastiantoepfer.openvdi.adapter.in.rest.CompaniesResource;
-import io.github.sebastiantoepfer.openvdi.adapter.in.rest.OpenVDIResource;
-import jakarta.ws.rs.core.Application;
-import java.util.Set;
+public final class Constants {
 
-public final class OpenVDIApplication extends Application {
+    public static final String SELF = "_self";
+    public static final String SCHEMA = "describedby";
+    public static final String SCHEMA_MEDIA_TYPE = "application/schema+json";
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        return Set.of(OpenVDIResource.class, CompaniesResource.class);
-    }
+    private Constants() {}
 }

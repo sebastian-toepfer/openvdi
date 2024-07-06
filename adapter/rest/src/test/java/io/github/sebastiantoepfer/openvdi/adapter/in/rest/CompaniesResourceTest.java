@@ -25,6 +25,8 @@ package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyIterableOf;
+import static org.hamcrest.Matchers.hasItems;
 
 import io.github.sebastiantoepfer.openvdi.domain.Company;
 import io.github.sebastiantoepfer.openvdi.domain.Company.CompanyName;
@@ -32,7 +34,9 @@ import io.github.sebastiantoepfer.openvdi.domain.DefaultCompany;
 import io.github.sebastiantoepfer.openvdi.port.in.ListKnowCompanies;
 import jakarta.json.Json;
 import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,20 +66,79 @@ class CompaniesResourceTest extends JerseyTest {
     void should_return_companies() throws Exception {
         companies.add(new DefaultCompany(new CompanyName("ACME")));
         assertThat(
-            target("/companies")
-                .request()
-                .accept(MediaType.APPLICATION_JSON)
-                .buildGet()
-                .invoke()
-                .readEntity(JsonStructure.class),
-            is(
-                Json.createArrayBuilder()
-                    .add(
-                        Json.createObjectBuilder()
-                            .add("location", "http://localhost:9998/companies/41434d45")
-                            .add("name", "ACME")
-                    )
+            target("/companies").request().accept(MediaType.APPLICATION_JSON).buildGet().invoke(),
+            new ResponseMatcher<>(
+                null,
+                hasItems(
+                    Link.fromUri("http://localhost:9998/companies")
+                        .type(MediaType.APPLICATION_JSON)
+                        .rel("_self")
+                        .build(),
+                    Link.fromUri("http://localhost:9998/companies")
+                        .type(Constants.SCHEMA_MEDIA_TYPE)
+                        .rel("describedby")
+                        .build()
+                ),
+                JsonStructure.class,
+                is(
+                    Json.createArrayBuilder()
+                        .add(
+                            Json.createObjectBuilder()
+                                .add("location", "http://localhost:9998/companies/41434d45")
+                                .add("name", "ACME")
+                        )
+                        .build()
+                )
+            )
+        );
+    }
+
+    @Test
+    void should_return_urls_of_this_resource() {
+        assertThat(
+            target("/companies").request().build("HEAD").invoke().getLinks(),
+            hasItems(
+                Link.fromUri("http://localhost:9998/companies").type(MediaType.APPLICATION_JSON).rel("_self").build(),
+                Link.fromUri("http://localhost:9998/companies")
+                    .type(Constants.SCHEMA_MEDIA_TYPE)
+                    .rel("describedby")
                     .build()
+            )
+        );
+    }
+
+    @Test
+    void should_return_schema_of_this_resource() {
+        assertThat(
+            target("/companies").request("application/schema+json").buildGet().invoke(),
+            new ResponseMatcher<>(
+                null,
+                is(emptyIterableOf(Link.class)),
+                JsonValue.class,
+                is(
+                    Json.createObjectBuilder()
+                        .add("$schema", "https://json-schema.org/draft/2020-12/schema")
+                        .add("type", "array")
+                        .add(
+                            "items",
+                            Json.createObjectBuilder()
+                                .add("type", "object")
+                                .add(
+                                    "properties",
+                                    Json.createObjectBuilder()
+                                        .add(
+                                            "location",
+                                            Json.createObjectBuilder()
+                                                .add("type", "string")
+                                                .add("format", "uri")
+                                                .add("readOnly", true)
+                                        )
+                                        .add("name", Json.createObjectBuilder().add("type", "string"))
+                                )
+                                .add("required", Json.createArrayBuilder().add("name"))
+                        )
+                        .build()
+                )
             )
         );
     }
