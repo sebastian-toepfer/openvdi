@@ -49,5 +49,125 @@
         <project.build.outputTimestamp>2024-07-04T18:00:00Z</project.build.outputTimestamp>
 
         <maven.compiler.source>17</maven.compiler.source>
+
+        <ddd.version>0.7.0</ddd.version>
+        <quarkus.version>3.12.0</quarkus.version>
     </properties>
+
+    <modules>
+        <module>domain</module>
+        <module>port</module>
+        <module>service</module>
+        <module>adapter</module>
+        <module>app</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>3.1.7</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkus.platform</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${quarkus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>10.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.sebastian-toepfer.ddd</groupId>
+                <artifactId>common</artifactId>
+                <version>${ddd.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sebastian-toepfer.ddd</groupId>
+                <artifactId>media-json-api</artifactId>
+                <version>${ddd.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sebastian-toepfer.ddd</groupId>
+                <artifactId>media-core</artifactId>
+                <version>${ddd.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
+                <version>1.1.6</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.quarkus.platform</groupId>
+                    <artifactId>quarkus-maven-plugin</artifactId>
+                    <version>${quarkus.version}</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>build</goal>
+                                <goal>generate-code</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <executions>
+                        <execution>
+                            <id>ueber-jar</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <filters>
+                                    <filter>
+                                        <!--
+                                            Shading signed JARs will fail without this.
+                                            http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
+                                        -->
+                                        <artifact>*:*</artifact>
+                                        <excludes>
+                                            <exclude>META-INF/*.SF</exclude>
+                                            <exclude>META-INF/*.DSA</exclude>
+                                            <exclude>META-INF/*.RSA</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- until we have a better understanding how we build all the pieces -->
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
