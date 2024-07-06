@@ -1,0 +1,16 @@
+---
+name: build
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    uses: sebastian-toepfer/gh-common/.github/workflows/build.yml@v1
+    with:
+      sonar-projektKey: sebastian-toepfer_openvdi
+    secrets: inherit
