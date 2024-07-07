@@ -50,7 +50,7 @@ class OpenVDIResourceTest extends JerseyTest {
             new ResponseMatcher(
                 null,
                 hasItems(
-                    Link.fromUri("http://localhost:9998/").type(MediaType.APPLICATION_JSON).rel("_self").build(),
+                    Link.fromUri("http://localhost:9998/").type(MediaType.APPLICATION_JSON).rel("self").build(),
                     Link.fromUri("http://localhost:9998/companies")
                         .type(MediaType.APPLICATION_JSON)
                         .rel("companies")
@@ -68,7 +68,7 @@ class OpenVDIResourceTest extends JerseyTest {
         assertThat(
             target("/").request(MediaType.APPLICATION_JSON).build("HEAD").invoke().getLinks(),
             hasItems(
-                Link.fromUri("http://localhost:9998/").type(MediaType.APPLICATION_JSON).rel("_self").build(),
+                Link.fromUri("http://localhost:9998/").type(MediaType.APPLICATION_JSON).rel("self").build(),
                 Link.fromUri("http://localhost:9998/companies")
                     .type(MediaType.APPLICATION_JSON)
                     .rel("companies")

@@ -25,7 +25,7 @@ package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
 public final class Constants {
 
-    public static final String SELF = "_self";
+    public static final String SELF = "self";
     public static final String SCHEMA = "describedby";
     public static final String SCHEMA_MEDIA_TYPE = "application/schema+json";
 

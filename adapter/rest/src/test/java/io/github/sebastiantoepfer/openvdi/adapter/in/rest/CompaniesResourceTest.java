@@ -72,7 +72,7 @@ class CompaniesResourceTest extends JerseyTest {
                 hasItems(
                     Link.fromUri("http://localhost:9998/companies")
                         .type(MediaType.APPLICATION_JSON)
-                        .rel("_self")
+                        .rel("self")
                         .build(),
                     Link.fromUri("http://localhost:9998/companies")
                         .type(Constants.SCHEMA_MEDIA_TYPE)
@@ -98,7 +98,7 @@ class CompaniesResourceTest extends JerseyTest {
         assertThat(
             target("/companies").request().build("HEAD").invoke().getLinks(),
             hasItems(
-                Link.fromUri("http://localhost:9998/companies").type(MediaType.APPLICATION_JSON).rel("_self").build(),
+                Link.fromUri("http://localhost:9998/companies").type(MediaType.APPLICATION_JSON).rel("self").build(),
                 Link.fromUri("http://localhost:9998/companies")
                     .type(Constants.SCHEMA_MEDIA_TYPE)
                     .rel("describedby")
