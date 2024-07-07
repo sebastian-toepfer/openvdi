@@ -25,7 +25,7 @@ package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
 import static io.github.sebastiantoepfer.openvdi.adapter.in.rest.Constants.SELF;
 
-import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
@@ -40,13 +40,13 @@ import java.util.stream.Stream;
 abstract class SelfDescribeableResource {
 
     private final UriInfo info;
-    private final JsonObject schema;
+    private final JsonValue schema;
 
     protected SelfDescribeableResource(final UriInfo info) {
         this(info, null);
     }
 
-    protected SelfDescribeableResource(final UriInfo info, final JsonObject schema) {
+    protected SelfDescribeableResource(final UriInfo info, final JsonValue schema) {
         this.info = Objects.requireNonNull(info);
         this.schema = schema;
     }
@@ -60,7 +60,7 @@ abstract class SelfDescribeableResource {
         return schema().map(Response::ok).orElseGet(() -> Response.notAcceptable(List.of())).build();
     }
 
-    protected Optional<JsonObject> schema() {
+    protected Optional<JsonValue> schema() {
         return Optional.ofNullable(schema);
     }
 

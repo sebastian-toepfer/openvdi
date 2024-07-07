@@ -23,13 +23,11 @@
  */
 package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
-import io.github.sebastiantoepfer.ddd.media.core.decorator.NameFilteredDecorator;
 import io.github.sebastiantoepfer.ddd.media.json.stream.JsonArrayStreamMediaPrintableAdapter;
 import io.github.sebastiantoepfer.ddd.media.json.stream.TerminableDecorator;
 import io.github.sebastiantoepfer.openvdi.domain.Company;
 import io.github.sebastiantoepfer.openvdi.port.in.ListKnowCompanies;
 import jakarta.inject.Inject;
-import jakarta.json.Json;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -38,7 +36,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import jakarta.ws.rs.core.UriInfo;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,35 +46,12 @@ import java.util.stream.Stream;
 public class CompaniesResource extends SelfDescribeableResource {
 
     private static final Logger LOG = Logger.getLogger(CompaniesResource.class.getName());
+    private static final JsonSchemaRegistry SCHEMAS = new JsonSchemaRegistry();
     private final ListKnowCompanies knowCompanies;
 
     @Inject
     public CompaniesResource(final UriInfo uri, final ListKnowCompanies knowCompanies) {
-        super(
-            uri,
-            Json.createObjectBuilder()
-                .add("$schema", "https://json-schema.org/draft/2020-12/schema")
-                .add("type", "array")
-                .add(
-                    "items",
-                    Json.createObjectBuilder()
-                        .add("type", "object")
-                        .add(
-                            "properties",
-                            Json.createObjectBuilder()
-                                .add(
-                                    "location",
-                                    Json.createObjectBuilder()
-                                        .add("type", "string")
-                                        .add("format", "uri")
-                                        .add("readOnly", true)
-                                )
-                                .add("name", Json.createObjectBuilder().add("type", "string"))
-                        )
-                        .add("required", Json.createArrayBuilder().add("name"))
-                )
-                .build()
-        );
+        super(uri, SCHEMAS.searchArraySchemaFor(Company.class));
         this.knowCompanies = Objects.requireNonNull(knowCompanies);
     }
 
@@ -92,13 +66,7 @@ public class CompaniesResource extends SelfDescribeableResource {
                     try (
                         final var media = new JsonArrayStreamMediaPrintableAdapter(
                             out,
-                            m ->
-                                new TerminableDecorator(
-                                    new NameFilteredDecorator(
-                                        m,
-                                        location.asNamePredicate().or(List.of("name")::contains)
-                                    )
-                                )
+                            m -> new TerminableDecorator(SCHEMAS.createNameFilterFor(Company.class, m))
                         );
                         final Stream<Company> companies = knowCompanies.list()
                     ) {
