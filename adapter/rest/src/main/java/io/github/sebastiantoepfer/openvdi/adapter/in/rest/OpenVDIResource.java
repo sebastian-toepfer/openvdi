@@ -59,7 +59,13 @@ public class OpenVDIResource extends SelfDescribeableResource {
                 Arrays.stream(links)
                     .filter(l -> MediaType.APPLICATION_JSON.equals(l.getType()))
                     .filter(not(l -> l.getRel().equals(SELF)))
-                    .map(l -> Map.entry(l.getRel(), (JsonValue) Json.createValue(l.getUri().toString())))
+                    .map(
+                        l ->
+                            Map.entry(
+                                l.getRel().concat("_location"),
+                                (JsonValue) Json.createValue(l.getUri().toString())
+                            )
+                    )
                     .collect(JsonCollectors.toJsonObject())
             )
             .build();
@@ -71,6 +77,7 @@ public class OpenVDIResource extends SelfDescribeableResource {
             Link.fromUri(getAbsolutePathBuilder().path("companies").build())
                 .type(MediaType.APPLICATION_JSON)
                 .rel("companies")
+                .title("Companies")
         ).map(Link.Builder::build);
     }
 }

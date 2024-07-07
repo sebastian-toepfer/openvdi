@@ -54,10 +54,11 @@ class OpenVDIResourceTest extends JerseyTest {
                     Link.fromUri("http://localhost:9998/companies")
                         .type(MediaType.APPLICATION_JSON)
                         .rel("companies")
+                        .title("Companies")
                         .build()
                 ),
                 JsonObject.class,
-                is(Json.createObjectBuilder().add("companies", "http://localhost:9998/companies").build())
+                is(Json.createObjectBuilder().add("companies_location", "http://localhost:9998/companies").build())
             )
         );
     }
@@ -71,6 +72,7 @@ class OpenVDIResourceTest extends JerseyTest {
                 Link.fromUri("http://localhost:9998/companies")
                     .type(MediaType.APPLICATION_JSON)
                     .rel("companies")
+                    .title("Companies")
                     .build()
             )
         );
