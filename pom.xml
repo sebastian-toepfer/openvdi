@@ -58,6 +58,7 @@
         <module>port</module>
         <module>service</module>
         <module>adapter</module>
+        <module>ui</module>
         <module>app</module>
     </modules>
 
