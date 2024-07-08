@@ -26,7 +26,6 @@ package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 import static io.github.sebastiantoepfer.openvdi.adapter.in.rest.Constants.SELF;
 import static java.util.function.Predicate.not;
 
-import jakarta.inject.Inject;
 import jakarta.json.Json;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonCollectors;
@@ -36,7 +35,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriInfo;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -44,11 +42,6 @@ import java.util.stream.Stream;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class OpenVDIResource extends SelfDescribeableResource {
-
-    @Inject
-    public OpenVDIResource(final UriInfo uri) {
-        super(uri);
-    }
 
     @GET
     public Response resources() {
