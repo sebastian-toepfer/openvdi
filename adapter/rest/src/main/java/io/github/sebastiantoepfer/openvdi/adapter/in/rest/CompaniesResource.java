@@ -35,7 +35,6 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
-import jakarta.ws.rs.core.UriInfo;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +49,8 @@ public class CompaniesResource extends SelfDescribeableResource {
     private final ListKnowCompanies knowCompanies;
 
     @Inject
-    public CompaniesResource(final UriInfo uri, final ListKnowCompanies knowCompanies) {
-        super(uri, SCHEMAS.searchArraySchemaFor(Company.class));
+    public CompaniesResource(final ListKnowCompanies knowCompanies) {
+        super(SCHEMAS.searchArraySchemaFor(Company.class));
         this.knowCompanies = Objects.requireNonNull(knowCompanies);
     }
 

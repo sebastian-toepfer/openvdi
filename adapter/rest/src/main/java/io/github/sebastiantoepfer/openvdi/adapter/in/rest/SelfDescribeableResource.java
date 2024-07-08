@@ -27,27 +27,28 @@ import static io.github.sebastiantoepfer.openvdi.adapter.in.rest.Constants.SELF;
 
 import jakarta.json.JsonValue;
 import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 abstract class SelfDescribeableResource {
 
-    private final UriInfo info;
+    @Context
+    private UriInfo info;
+
     private final JsonValue schema;
 
-    protected SelfDescribeableResource(final UriInfo info) {
-        this(info, null);
+    protected SelfDescribeableResource() {
+        this(null);
     }
 
-    protected SelfDescribeableResource(final UriInfo info, final JsonValue schema) {
-        this.info = Objects.requireNonNull(info);
+    protected SelfDescribeableResource(final JsonValue schema) {
         this.schema = schema;
     }
 

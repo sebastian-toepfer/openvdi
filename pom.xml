@@ -51,7 +51,6 @@
         <maven.compiler.source>17</maven.compiler.source>
 
         <ddd.version>0.7.0</ddd.version>
-        <quarkus.version>3.12.1</quarkus.version>
     </properties>
 
     <modules>
@@ -72,13 +71,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>io.quarkus.platform</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-bom</artifactId>
                 <version>10.0.0</version>
@@ -95,11 +87,23 @@
                 <groupId>io.github.sebastian-toepfer.ddd</groupId>
                 <artifactId>media-json-api</artifactId>
                 <version>${ddd.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-annotations</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.github.sebastian-toepfer.ddd</groupId>
                 <artifactId>media-core</artifactId>
                 <version>${ddd.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-annotations</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -113,21 +117,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>io.quarkus.platform</groupId>
-                    <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${quarkus.version}</version>
-                    <extensions>true</extensions>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>build</goal>
-                                <goal>generate-code</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
@@ -157,6 +146,15 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
                 </plugin>
 
                 <!-- until we have a better understanding how we build all the pieces -->
