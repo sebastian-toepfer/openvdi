@@ -17,7 +17,6 @@
 
     <modules>
         <module>quarkus</module>
-        <module>undertow</module>
     </modules>
 
     <dependencies>

@@ -29,43 +29,9 @@ import java.util.Objects;
 public interface Company extends Printable {
     boolean hasName(CompanyName name);
 
-    final class CompanyName {
-
-        private final String value;
-
-        public CompanyName(final String value) {
-            this.value = Objects.requireNonNull(value);
-        }
-
-        String value() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return "Name{" + "value=" + value + '}';
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 17 * hash + Objects.hashCode(this.value);
-            return hash;
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final CompanyName other = (CompanyName) obj;
-            return Objects.equals(this.value, other.value);
+    record CompanyName(String value) {
+        public CompanyName {
+            Objects.requireNonNull(value);
         }
     }
 }

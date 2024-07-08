@@ -21,23 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.sebastiantoepfer.openvdi.app.untertow;
+package io.github.sebastiantoepfer.openvdi.adapter.in.rest;
 
-import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
+public final class Constants {
 
-public final class Launcher {
+    public static final String SELF = "self";
+    public static final String SCHEMA = "describedby";
+    public static final String SCHEMA_MEDIA_TYPE = "application/schema+json";
 
-    private final UndertowJaxrsServer server;
-
-    public static void main(final String[] args) {
-        new Launcher().startOnDefaultPort();
-    }
-
-    public Launcher() {
-        server = new UndertowJaxrsServer().setPort(8080);
-    }
-
-    public void startOnDefaultPort() {
-        server.start().deploy(OpenVDIApplication.class);
-    }
+    private Constants() {}
 }
