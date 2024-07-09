@@ -14,3 +14,10 @@ updates:
     interval: daily
     time: "01:00"
   target-branch: main
+
+- package-ecosystem: npm
+  directory: "ui/src/main/svelte"
+  schedule:
+    interval: daily
+    time: "01:00"
+  target-branch: main
