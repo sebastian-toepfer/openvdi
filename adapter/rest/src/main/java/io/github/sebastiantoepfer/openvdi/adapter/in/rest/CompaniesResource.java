@@ -63,9 +63,8 @@ public class CompaniesResource extends SelfDescribeableResource {
             .entity(
                 (StreamingOutput) out -> {
                     try (
-                        final var media = new JsonArrayStreamMediaPrintableAdapter(
-                            out,
-                            m -> new TerminableDecorator(SCHEMAS.createNameFilterFor(Company.class, m))
+                        final var media = new JsonArrayStreamMediaPrintableAdapter(out, m ->
+                            new TerminableDecorator(SCHEMAS.createNameFilterFor(Company.class, m))
                         );
                         final Stream<Company> companies = knowCompanies.list()
                     ) {
