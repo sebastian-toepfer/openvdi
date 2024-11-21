@@ -15,7 +15,7 @@
     <name>OpenVDI :: app :: quarkus</name>
 
     <properties>
-        <quarkus.version>3.16.3</quarkus.version>
+        <quarkus.version>3.16.4</quarkus.version>
     </properties>
 
     <dependencyManagement>
