@@ -21,3 +21,8 @@ updates:
     interval: daily
     time: "01:00"
   target-branch: main
+  groups:
+    vite:
+      patterns:
+      - "vite"
+      - "@sveltejs/vite-plugin-svelte"
