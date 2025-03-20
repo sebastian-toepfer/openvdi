@@ -17,7 +17,7 @@
     <name>OpenVDI :: app :: payara</name>
 
     <properties>
-        <payara.version>6.2025.2</payara.version>
+        <payara.version>6.2025.3</payara.version>
     </properties>
 
     <dependencies>
