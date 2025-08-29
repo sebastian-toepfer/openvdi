@@ -53,13 +53,13 @@ class CompaniesResourceTest extends JerseyTest {
     @Override
     protected Application configure() {
         return new ResourceConfig(CompaniesResource.class).register(
-            new AbstractBinder() {
-                @Override
-                protected void configure() {
-                    bind(companies).to(ListKnowCompanies.class);
+                new AbstractBinder() {
+                    @Override
+                    protected void configure() {
+                        bind(companies).to(ListKnowCompanies.class);
+                    }
                 }
-            }
-        );
+            );
     }
 
     @Test
