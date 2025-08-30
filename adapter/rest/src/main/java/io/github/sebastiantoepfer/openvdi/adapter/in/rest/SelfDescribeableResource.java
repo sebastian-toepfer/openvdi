@@ -58,7 +58,10 @@ abstract class SelfDescribeableResource {
     }
 
     protected Response jsonSchema() {
-        return schema().map(Response::ok).orElseGet(() -> Response.notAcceptable(List.of())).build();
+        return schema()
+            .map(Response::ok)
+            .orElseGet(() -> Response.notAcceptable(List.of()))
+            .build();
     }
 
     protected Optional<JsonValue> schema() {

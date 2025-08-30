@@ -40,7 +40,9 @@ public final class InMemoryCompanies implements Companies {
 
     @Override
     public Optional<Company> search(final Company.CompanyName name) {
-        return list().filter(company -> company.hasName(name)).findFirst();
+        return list()
+            .filter(company -> company.hasName(name))
+            .findFirst();
     }
 
     @Override
