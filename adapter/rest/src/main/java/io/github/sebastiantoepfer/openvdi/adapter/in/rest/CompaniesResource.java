@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 @Path("/companies")
 @Produces(MediaType.APPLICATION_JSON)
-public class CompaniesResource extends SelfDescribeableResource {
+public final class CompaniesResource extends SelfDescribeableResource {
 
     private static final Logger LOG = Logger.getLogger(CompaniesResource.class.getName());
     private static final JsonSchemaRegistry SCHEMAS = new JsonSchemaRegistry();
