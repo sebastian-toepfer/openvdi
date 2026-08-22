@@ -29,7 +29,7 @@
                         </goals>
                         <phase>initialize</phase>
                         <configuration>
-                            <nodeVersion>v20.15.1</nodeVersion>
+                            <nodeVersion>v24.19.0</nodeVersion>
                         </configuration>
                     </execution>
                     <execution>
